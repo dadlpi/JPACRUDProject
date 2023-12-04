@@ -14,14 +14,16 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class AutoJobDaoImpl implements AutoJobDAO {
 	
+	//NOTE - there is no em.getTransaction.being/commit
+	//NOTE - there is no em.close();
+	
 	@PersistenceContext
 	private EntityManager em;
 	
 
 	@Override
 	public AutoJob findById(int jobId) {
-		// TODO Auto-generated method stub
-		return null;
+		return em.find(AutoJob.class, jobId);
 	}
 
 	@Override
@@ -34,20 +36,33 @@ public class AutoJobDaoImpl implements AutoJobDAO {
 
 	@Override
 	public AutoJob create(AutoJob autojob) {
-		// TODO Auto-generated method stub
-		return null;
+			em.persist(autojob);
+		return autojob;
 	}
 
 	@Override
 	public AutoJob udpdate(int jobId, AutoJob autojob) {
-		// TODO Auto-generated method stub
-		return null;
+		AutoJob autoJobFound = em.find(AutoJob.class, jobId);
+		
+		if(autoJobFound != null) {
+			
+			autoJobFound.setActiveInd(autojob.getActiveInd());
+			autoJobFound.setDescription(autojob.getDescription());
+		}
+		
+		return autoJobFound;
 	}
 
+	
 	@Override
 	public boolean delete(int jobId) {
-		// TODO Auto-generated method stub
-		return false;
+		AutoJob autoJobFound = em.find(AutoJob.class, jobId);
+		boolean successfullyRemoved = false;
+		if(autoJobFound != null) {
+			em.remove(autoJobFound);
+			successfullyRemoved = !em.contains(autoJobFound);
+		}
+		return successfullyRemoved;
 	}
 
 }

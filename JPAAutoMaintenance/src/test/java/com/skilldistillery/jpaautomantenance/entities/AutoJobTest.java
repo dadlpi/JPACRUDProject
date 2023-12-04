@@ -15,7 +15,7 @@ import jakarta.persistence.Persistence;
 class AutoJobTest {
 	private static EntityManagerFactory emf;
 	private EntityManager em;
-	private AutoJob AutoJob;
+	private AutoJob autoJob;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -31,13 +31,13 @@ class AutoJobTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		em = emf.createEntityManager();
-		AutoJob = em.find(AutoJob.class, 1);
+		autoJob = em.find(AutoJob.class, 1);
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
 		em.close();
-		AutoJob = null;
+		autoJob = null;
 	}
 	
 	
@@ -45,8 +45,12 @@ class AutoJobTest {
 
 	@Test
 	void test_AutoJob_basic_mappings() {
-		assertNotNull(AutoJob);
-		assertEquals("Brake", AutoJob.getNameOfJob());
+		assertNotNull(autoJob);
+		assertEquals(1, autoJob.getId() );
+		assertTrue(autoJob.getIntervalBetweenJob() > 0);
+		assertEquals("2023-12-03T17:54:02", autoJob.getCreateDate().toString() );
+		assertEquals(2023, autoJob.getCreateDate().getYear() );
+//		assertEquals(LocalDateTime.of(2014, 5, 26, 21, 04, 30), rental.getReturnDate());
 	}
 
 	@Test
